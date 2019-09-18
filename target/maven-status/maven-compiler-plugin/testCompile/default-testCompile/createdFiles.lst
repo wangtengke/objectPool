@@ -1,0 +1,5 @@
+com\wtk\objectPool\poolFactory\JDBCConnectionFactory.class
+com\wtk\objectPool\poolFactory\PoolFactoryTest.class
+com\wtk\objectPool\poolFactory\StringBufferValidator.class
+com\wtk\objectPool\poolFactory\JDBCConnectionValidator.class
+com\wtk\objectPool\poolFactory\StringBufferFactory.class
