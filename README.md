@@ -1,11 +1,11 @@
 # 项目需求
-![damend]()
+![damend](https://github.com/wangtengke/objectPool/blob/master/imgs/demand.jpg)
 
 # 概要设计
 1.对象池策略
-![objectpool]()
+![objectpool](https://github.com/wangtengke/objectPool/blob/master/imgs/objectpool.jpg)
 2.对象空闲时间超时清除策略
-![reject]()
+![reject](https://github.com/wangtengke/objectPool/blob/master/imgs/reject.jpg)
 # 接口设计
 - **实现ObjectFactory接口**
 ```java
@@ -54,7 +54,7 @@ public class JDBCConnectionFactory implements ObjectFactory<Connection> {
 ```
 
 
--**实现Validator接口** 
+- **实现Validator接口** 
 ```java
 public interface Validator<T> {
     /**
