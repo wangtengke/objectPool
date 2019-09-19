@@ -5,9 +5,12 @@ import com.wtk.objectPool.objectFactory.ObjectFactory;
 import com.wtk.objectPool.objectPool.AbstractPool;
 import com.wtk.objectPool.objectPool.BlockingPool;
 import com.wtk.objectPool.objectPool.Validator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 /**
  * @program: objectPool
@@ -16,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @create: 2019-09-17
  **/
 public final class BoundedBlockingPool<T> extends AbstractPool<T> implements BlockingPool<T>{
+    private Log log = LogFactory.getLog(this.getClass());
     public final static AtomicInteger count = new AtomicInteger(0);
     private int coreSize;
     private int maxSize;
@@ -64,15 +68,15 @@ public final class BoundedBlockingPool<T> extends AbstractPool<T> implements Blo
                     while(!objects.isEmpty() && System.currentTimeMillis() - objects.getLast().getTime()>keepAliveTime) {
                         objects.pollLast();
                         int c = count.decrementAndGet();
-                        System.out.println(objects.size());
-                        System.out.println("can use count: " + c);
+                       log.info("can use count:  " + c);
+//                        System.out.println("can use count: " + c);
                     }
                     if(count.get()<coreSize) {
                         for (int i = 0; i < coreSize-count.get(); i++) {
                             objects.add(new Base(System.currentTimeMillis(),objectFactory.createNew()));
                         }
                     }
-                    System.out.println("object's size: "+objects.size());
+                    log.info("object's size: "+objects.size());
 
                 }
             }
@@ -98,8 +102,8 @@ public final class BoundedBlockingPool<T> extends AbstractPool<T> implements Blo
             T t = null;
             try {
                 if(count.get()<coreSize) {
-                    System.out.println("cur object size: " + count.get() + "  coreSize:" + coreSize);
-
+//                    System.out.println("cur object size: " + count.get() + "  coreSize:" + coreSize);
+                    log.info("cur object size: " + count.get() + "  coreSize:" + coreSize);
                     for (int i = 0; i < coreSize - count.get(); i++) {
                         objects.add(new Base(System.currentTimeMillis(),objectFactory.createNew()));
                     }
@@ -109,10 +113,12 @@ public final class BoundedBlockingPool<T> extends AbstractPool<T> implements Blo
                     if(count.get()<maxSize) {
                         objects.add(new Base(System.currentTimeMillis(),objectFactory.createNew()));
                         count.incrementAndGet();
-                        System.out.println("cur object size: " + count.get() + "  maxSize" + maxSize);
+//                        System.out.println("cur object size: " + count.get() + "  maxSize" + maxSize);
+                        log.info("cur object size: " + count.get() + "  maxSize" + maxSize);
                     }
                     else {
-                        System.out.println("cur size greater than maxSize!!!");
+//                        System.out.println("cur size greater than maxSize!!!");
+                        log.warn("cur size greater than maxSize!!!");
 
                     }
                 }
@@ -120,7 +126,8 @@ public final class BoundedBlockingPool<T> extends AbstractPool<T> implements Blo
                 return (T) base.getT();
             }catch (Exception e) {
                 Thread.currentThread().interrupt();
-                System.out.println("poll timeout");
+//                System.out.println("poll timeout");
+                log.warn("poll timeout");
             }
             return t;
         }
@@ -143,7 +150,8 @@ public final class BoundedBlockingPool<T> extends AbstractPool<T> implements Blo
                 return (T)base.getT();
             }catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.out.println("poll timeout");
+//                System.out.println("poll timeout");
+                log.warn("poll timeout");
             }
             return t;
         }
